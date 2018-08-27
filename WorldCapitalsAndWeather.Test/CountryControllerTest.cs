@@ -21,7 +21,7 @@ namespace WorldCapitalsAndWeather.Test
             _testServer = new TestServer(new WebHostBuilder()
                 .UseContentRoot(GetContentRootPath())
                 .UseEnvironment("Test")
-                .UseStartup<Startup>());
+                .UseStartup<TestStartup>());
 
             _client = _testServer.CreateClient();
         }
@@ -62,6 +62,17 @@ namespace WorldCapitalsAndWeather.Test
             var response = await _client.SendAsync(_request);
 
             Assert.Equal(HttpStatusCode.NotFound,response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ReturnsTheCorrectWeather()
+        {
+            _request = new HttpRequestMessage(HttpMethod.Get, "/api/country/usa");
+            var response = await _client.SendAsync(_request);
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var countryResponse = JsonConvert.DeserializeObject<CountryViewModel>(responseString);
+            Assert.Equal("87", countryResponse.Temperature);
         }
     }
 }
