@@ -3,6 +3,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Newtonsoft.Json;
+using WorldCapitalsAndWeather.Models;
 using Xunit;
 
 namespace WorldCapitalsAndWeather.Test
@@ -39,6 +41,17 @@ namespace WorldCapitalsAndWeather.Test
             var response = await _client.SendAsync(_request);
 
             response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task ReturnsTheCorrectCapital()
+        {
+            _request = new HttpRequestMessage(HttpMethod.Get, "/api/country/argentina");
+            var response = await _client.SendAsync(_request);
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var countryResponse = JsonConvert.DeserializeObject<CountryViewModel>(responseString);
+            Assert.Equal("Buenos Aires", countryResponse.Capital);
         }
     }
 }
