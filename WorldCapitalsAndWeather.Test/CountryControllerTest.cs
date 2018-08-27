@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -52,6 +53,15 @@ namespace WorldCapitalsAndWeather.Test
             var responseString = await response.Content.ReadAsStringAsync();
             var countryResponse = JsonConvert.DeserializeObject<CountryViewModel>(responseString);
             Assert.Equal("Buenos Aires", countryResponse.Capital);
+        }
+
+        [Fact]
+        public async Task FailsWhenCountryIsNotFound()
+        {
+            _request = new HttpRequestMessage(HttpMethod.Get, "/api/country/invalid");
+            var response = await _client.SendAsync(_request);
+
+            Assert.Equal(HttpStatusCode.NotFound,response.StatusCode);
         }
     }
 }
