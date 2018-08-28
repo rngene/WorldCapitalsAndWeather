@@ -72,7 +72,7 @@ namespace WorldCapitalsAndWeather.Test
 
             var responseString = await response.Content.ReadAsStringAsync();
             var countryResponse = JsonConvert.DeserializeObject<CountryViewModel>(responseString);
-            Assert.Equal("87", countryResponse.Temperature);
+            Assert.Equal("87.0", countryResponse.Temperature);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Net.Http;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,11 @@ namespace WorldCapitalsAndWeather
             services.AddMvc();
             services.AddSingleton<ICountriesService, CountriesService>();
             services.AddSingleton<IWeatherService, WeatherService>();
+
+            var clientHandler = new HttpClientHandler();
+            clientHandler.Proxy = new CarnivalProxy();
+            HttpClient client = new HttpClient(clientHandler);
+            services.AddSingleton(client);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
