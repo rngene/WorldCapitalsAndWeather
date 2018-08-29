@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using WorldCapitalsAndWeather.Models;
@@ -19,7 +18,7 @@ namespace WorldCapitalsAndWeather.Test
         {
             var testServer = new TestServer(new WebHostBuilder()
                 .UseEnvironment("Test")
-                .UseStartup<Startup>()
+                .UseStartup<TestStartup>()
                 .UseContentRoot(GetContentRoot()));
 
             _client = testServer.CreateClient();
@@ -58,6 +57,17 @@ namespace WorldCapitalsAndWeather.Test
             var response = await _client.GetAsync("/api/country/invalid");
 
             Assert.Equal(HttpStatusCode.NotFound,response.StatusCode);
+        }
+
+        [Fact]
+        public async void ReturnsTheCorrectWeather()
+        {
+            var response = await _client.GetAsync("/api/country/cuba");
+
+            var asString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var country = JsonConvert.DeserializeObject<CountryResponse>(asString);
+
+            Assert.Equal("87.0", country.Temperature);
         }
     }
 }
