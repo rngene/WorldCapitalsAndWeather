@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using WorldCapitalsAndWeather.Models;
@@ -48,6 +50,14 @@ namespace WorldCapitalsAndWeather.Test
             var country = JsonConvert.DeserializeObject<CountryResponse>(asString);
 
             Assert.Equal("Mexico City", country.Capital);
+        }
+
+        [Fact]
+        public async void FailsWhenCountryIsNotFound()
+        {
+            var response = await _client.GetAsync("/api/country/invalid");
+
+            Assert.Equal(HttpStatusCode.NotFound,response.StatusCode);
         }
     }
 }
