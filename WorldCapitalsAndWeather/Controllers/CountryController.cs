@@ -29,7 +29,7 @@ namespace WorldCapitalsAndWeather.Controllers
 
             var temperature = await _weatherService.GetWeather(countryDb.RegionId);
 
-            return Ok(new CountryViewModel {Capital = countryDb.Capital, Temperature = temperature});
+            return Ok(new CountryResponse {Capital = countryDb.Capital, Temperature = temperature});
         }
     }
 }

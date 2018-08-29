@@ -24,7 +24,7 @@ namespace WorldCapitalsAndWeather.Services
             string temperature;
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync("http://dataservice.accuweather.com/currentconditions/v1/" + regionId + "?apikey=dtWdRsvOQaWb7QRTiVA8Hdvrsmwtck7G").ConfigureAwait(false);
+                var response = await _httpClient.GetAsync("http://dataservice.accuweather.com/currentconditions/v1/" + regionId + "?apikey=dtWdRsvOQaWb7QRTiVA8Hdvrsmwtck7G").ConfigureAwait(false);
                 var asString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 var weather = JsonConvert.DeserializeObject<AccuweatherResult[]>(asString);
                 temperature = weather[0].Temperature.Imperial.Value.ToString(CultureInfo.InvariantCulture);

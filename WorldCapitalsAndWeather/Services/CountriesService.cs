@@ -8,12 +8,13 @@ namespace WorldCapitalsAndWeather.Services
 
         public Country GetCountry(string name)
         {
-            var db = new CountriesContext();
+            using (var db = new CountriesContext())
+            {
+                var country = db.Country.FirstOrDefault(c => c.Name == name);
 
-            var country = db.Country.FirstOrDefault(c => c.Name == name);
+                return country;
 
-            return country;
-
+            }
         }
     }
 }
