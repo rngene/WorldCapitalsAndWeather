@@ -13,7 +13,8 @@ namespace WorldCapitalsAndWeather.Test
 {
     public class TestStartup: Startup
     {
-        private readonly static  Lazy<string> _weatherResponse = new Lazy<string>(() => File.ReadAllText(@"Data\weather.json"));
+        private static readonly Lazy<string> _weatherContent =
+            new Lazy<string>(() => File.ReadAllText(@"Data\Weather.json"));
 
         public TestStartup(IConfiguration configuration) : base(configuration)
         {
@@ -23,17 +24,16 @@ namespace WorldCapitalsAndWeather.Test
         {
             ConfigureServices(services);
 
-            //var weatherServiceMock = new Mock<IWeatherService>();
-            //weatherServiceMock.Setup(w => w.GetWeather(It.IsAny<String>())).ReturnsAsync("87.0");
+            //var weatherMock = new Mock<IWeatherService>();
+            //weatherMock.Setup(w => w.GetWeather(It.IsAny<string>())).ReturnsAsync("87.0");
 
-            //services.AddSingleton(weatherServiceMock.Object);
+            //services.AddSingleton(weatherMock.Object);
 
-            var mockHttpHandler = new MockHttpMessageHandler();
-            mockHttpHandler.When("http://dataservice.accuweather.com/currentconditions/v1/*")
-                .Respond(HttpStatusCode.OK, "application/json", _weatherResponse.Value);
+            var mockhttp = new MockHttpMessageHandler();
+            mockhttp.When("http://dataservice.accuweather.com/currentconditions/v1/*").Respond(
+                HttpStatusCode.OK, "application/json", _weatherContent.Value);
 
-            services.AddSingleton(mockHttpHandler.ToHttpClient());
-
+            services.AddSingleton(mockhttp.ToHttpClient());
         }
     }
 }

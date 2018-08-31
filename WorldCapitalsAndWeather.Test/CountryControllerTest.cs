@@ -18,26 +18,27 @@ namespace WorldCapitalsAndWeather.Test
 
         public CountryControllerTest()
         {
-            var testServer = new TestServer(new WebHostBuilder()
+            var server = new TestServer(new WebHostBuilder()
                 .UseEnvironment("Test")
-                .UseContentRoot(GetContentRoot())
                 .UseStartup<TestStartup>()
+                .UseContentRoot(GetContentRootPath())
             );
 
-            _client = testServer.CreateClient();
+            _client = server.CreateClient();
         }
 
-        private string GetContentRoot()
+        private string GetContentRootPath()
         {
-            var currentFolder = Environment.CurrentDirectory;
-            return Path.Combine(currentFolder, "../../../../WorldCapitalsAndWeather");
+            var currentPath = Environment.CurrentDirectory;
+            var contentPath = Path.Combine(currentPath, "../../../../WorldCapitalsAndWeather");
+
+            return contentPath;
         }
 
         [Fact]
         public async void ReturnsSuccessWhenCountryIsValid()
         {
             var response = await _client.GetAsync("/api/country/usa");
-
             response.EnsureSuccessStatusCode();
         }
 
@@ -54,21 +55,25 @@ namespace WorldCapitalsAndWeather.Test
         {
             var response = await _client.GetAsync("/api/country/colombia");
 
-            var responseAsString = await response.Content.ReadAsStringAsync();
-            var countryResponse = JsonConvert.DeserializeObject<CountryResponse>(responseAsString);
-            
+            var asString = await response.Content.ReadAsStringAsync();
+
+            var countryResponse = JsonConvert.DeserializeObject<CountryResponse>(asString);
+
             Assert.Equal("Bogota", countryResponse.Capital);
+
         }
 
         [Fact]
-        public async void ReturnsTheCorrectWeather()
+        public async void ReturnsTheCorrectTemperature()
         {
             var response = await _client.GetAsync("/api/country/cuba");
 
-            var responseAsString = await response.Content.ReadAsStringAsync();
-            var countryResponse = JsonConvert.DeserializeObject<CountryResponse>(responseAsString);
+            var asString = await response.Content.ReadAsStringAsync();
+
+            var countryResponse = JsonConvert.DeserializeObject<CountryResponse>(asString);
 
             Assert.Equal("87.0", countryResponse.Temperature);
+
         }
     }
 }
