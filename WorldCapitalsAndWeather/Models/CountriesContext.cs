@@ -10,7 +10,8 @@ namespace WorldCapitalsAndWeather.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var currentDir = Directory.GetCurrentDirectory();
-            var dbPath = Path.Combine(currentDir, "App_Data\\Countries.mdf");
+            var dbPath = @"C:\git\WorldCapitalsAndWeather\WorldCapitalsAndWeather\App_Data\Countries.mdf";
+                //Path.Combine(currentDir, "App_Data\\Countries.mdf");
 
             if (!optionsBuilder.IsConfigured)
             {

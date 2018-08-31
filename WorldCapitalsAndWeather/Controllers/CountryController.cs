@@ -20,7 +20,7 @@ namespace WorldCapitalsAndWeather.Controllers
         [HttpGet("{country}")]
         public async Task<IActionResult> Get([FromRoute]string country)
         {
-            var countryDb =_countriesService.GetCountry(country);
+            Country countryDb = _countriesService.GetCountry(country);
             
             if (countryDb == null)
             {

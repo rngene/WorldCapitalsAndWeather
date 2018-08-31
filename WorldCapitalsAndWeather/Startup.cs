@@ -24,7 +24,7 @@ namespace WorldCapitalsAndWeather
             services.AddSingleton<ICountriesService, CountriesService>();
             services.AddSingleton<IWeatherService, WeatherService>();
 
-            var clientHandler = new HttpClientHandler {Proxy = new CarnivalProxy()};
+            var clientHandler = new HttpClientHandler {/*Proxy = new CarnivalProxy()*/};
             var client = new HttpClient(clientHandler);
             services.AddSingleton(client);
         }
